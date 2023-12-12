@@ -18,6 +18,6 @@ Also, an AI for filtering out the news that isn't in your interests.
 - The program automatically gets news from many more websites on the same topic (then filters out non-relevant articles, stores information pieces, and removes copies). 
 
 # TODO
-[x] RSS reader, extract embeddings, summarize article using T5.
-[x] Store title, summary, content as JSON.
-[ ] Store the content along with embeddings. 
+- [x] RSS reader, extract embeddings, summarize article using T5.
+- [x] Store title, summary, content as JSON.
+- [ ] Store the content along with embeddings. 
