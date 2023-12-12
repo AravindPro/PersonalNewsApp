@@ -1,0 +1,7 @@
+transformers
+torch
+feedparser
+bs4
+sentence_transformers
+requests
+json
