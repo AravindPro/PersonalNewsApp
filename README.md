@@ -16,3 +16,8 @@ Also, an AI for filtering out the news that isn't in your interests.
 - You can open the news headlines to view them along with a summary.
 - You can then select a news headline and do one of the following: ask any questions regarding the news or enter storytelling mode, which describes the whole news for you.
 - The program automatically gets news from many more websites on the same topic (then filters out non-relevant articles, stores information pieces, and removes copies). 
+
+# TODO
+[x] RSS reader, extract embeddings, summarize article using T5.
+[x] Store title, summary, content as JSON.
+[ ] Store the content along with embeddings. 
