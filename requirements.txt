@@ -5,3 +5,4 @@ bs4
 sentence_transformers
 requests
 json
+pandas
