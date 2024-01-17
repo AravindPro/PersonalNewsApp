@@ -4,6 +4,7 @@
 # Based on my likings filter out the news I don't like
 # Allow converting webpages into rss feeds
 # Save the news you found out now into json. With another read=False parameter. Create HTML based viewer
+import os
 import re
 from pathlib import Path
 from time import sleep
@@ -14,6 +15,14 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import pandas as pd
 from gpt4free import you
+
+if not os.path.exists(f'{Path(__file__).parent.absolute()}/data/history.csv'):
+	pd.DataFrame(columns=['links', 'title', 'status', 'category', 'summary']).to_csv(
+		f'{Path(__file__).parent.absolute()}/data/history.csv')
+if not os.path.exists(f'{Path(__file__).parent.absolute()}/data/rss.csv'):
+	pd.DataFrame(columns=['links', 'category']).to_csv(
+		f'{Path(__file__).parent.absolute()}/data/rss.csv')
+	
 
 HISTORY = pd.read_csv(f'{Path(__file__).parent.absolute()}/data/history.csv', index_col=0)
 RSS = pd.read_csv(f'{Path(__file__).parent.absolute()}/data/rss.csv', index_col=0)
@@ -122,6 +131,37 @@ def fetchNewFeed(lastcheck=100):
 	HISTORY.to_csv(f'{Path(__file__).parent.absolute()}/data/history.csv')
 	return summary
 
+def fetchNewFeedPrint(lastcheck=100):
+	global HISTORY
+	historylinks = set(HISTORY['links'][:lastcheck])
+	newlinks = []
+
+	for i in range(len(RSS['links'])):
+		print(RSS['links'][i])
+		feed = feedparser.parse(RSS['links'][i])
+		for j in feed['entries']:
+			if j['link'] not in historylinks:
+				newlinks.append({"links":j['link'], "title": j['title'], "status": 0, "category": RSS['category'][i], "summary": ""})
+
+
+	for i in range(len(newlinks)):
+		print(f"{i}. {newlinks[i]['title']}")
+
+	inp = ""
+	while inp != 'q':
+		inp = input("Enter the article number")
+		try:
+			if inp[0]=='a':
+				print(getArticle(newlinks[int(inp[1:])]['links']))
+			else:
+				print(getSummaryYou(getArticle(newlinks[int(inp)]['links'])))
+		except Exception as e:
+			print(e)
+		print("---"*50)
+	df = pd.DataFrame(newlinks)
+	HISTORY = pd.concat([HISTORY, df], ignore_index=True)
+	HISTORY.to_csv(f'{Path(__file__).parent.absolute()}/data/history.csv')
+
 def getnochilderennodes(tag):
 	nochildrennodes = []
 	for i in tag.children:
@@ -199,9 +239,9 @@ if __name__=="__main__":
 	# It must generate a simple 
 
 	# Get a dict of history links
-	# addNewElementsToRss(['https://www.thehindu.com/news/national/feeder/default.rss',
-	#                     'https://www.thehindu.com/news/international/feeder/default.rss', 'https://cdn.technologyreview.com/topnews.rss'])
-	with open('data/feed.txt', 'w') as f:
-		f.write(prevSummary())
+	addNewElementsToRss(['https://www.thehindu.com/news/national/feeder/default.rss','https://cdn.technologyreview.com/topnews.rss'])
+	# with open('data/feed.txt', 'w') as f:
+	# 	f.write(prevSummary())
 	# print(getSummaryYou(
 	# 	f"Generate summary of: \n{getArticle('https://www.technologyreview.com/2024/01/12/1086442/the-innovation-that-gets-an-alzheimers-drug-through-the-blood-brain-barrier/')}"))
+	fetchNewFeedPrint()
