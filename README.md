@@ -20,7 +20,10 @@ Also, an AI for filtering out the news that isn't in your interests.
 # TODO
 - [x] RSS reader, extract embeddings, summarize article using T5.
 - [x] Store title, summary, content as JSON.
-- [ ] Store the content along with embeddings. 
+- [x] Store the content along with embeddings. 
+- [ ] Create a queue where all the "interesting" feed articles for you get stored.
+- [ ] The interface 
+- [ ] Deep search where all seemingly relevent paragraphs are retrived for a given news.
 
 # Ideas
 - For creating 
